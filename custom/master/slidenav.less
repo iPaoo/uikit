@@ -1,0 +1,58 @@
+//
+// Component: Slidenav
+//
+// ========================================================================
+
+
+// Variables
+// ========================================================================
+
+@slidenav-background:                           transparent;
+@slidenav-hover-background:                     transparent;
+@slidenav-active-background:                    transparent;
+
+
+// Component
+// ========================================================================
+
+.hook-slidenav() {
+	background-color: @slidenav-background;
+	transition: color 0.1s ease-in-out;
+}
+
+.hook-slidenav-hover() {background-color: @slidenav-hover-background;}
+.hook-slidenav-active() {background-color: @slidenav-active-background;}
+
+
+// Icon modifier
+// ========================================================================
+
+.hook-slidenav-previous() {}
+
+.hook-slidenav-next() {}
+
+
+// Size modifier
+// ========================================================================
+
+.hook-slidenav-large() {}
+
+
+// Container
+// ========================================================================
+
+.hook-slidenav-container() {}
+
+
+// Miscellaneous
+// ========================================================================
+
+.hook-icon-misc() {}
+
+
+// Inverse
+// ========================================================================
+
+.hook-inverse-slidenav() {}
+.hook-inverse-slidenav-hover() {}
+.hook-inverse-slidenav-active() {}

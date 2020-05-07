@@ -1,0 +1,91 @@
+//
+// Component: Article
+//
+// ========================================================================
+
+
+// Variables
+// ========================================================================
+
+@article-title-color:                           @global-emphasis-color;
+@article-title-font-family:                     @global-font-family;
+@article-title-font-weight:                     normal;
+@article-title-letter-spacing:                  0;
+@article-title-line-height:                     1.2;
+@article-title-text-transform:                  none;
+
+@article-title-link-color:                      @global-link-color;
+@article-title-link-hover-color:                @global-link-hover-color;
+
+@article-meta-color:                            @global-muted-color;
+@article-meta-font-family:                      @global-font-family;
+@article-meta-font-weight:                      normal;
+@article-meta-letter-spacing:                   0;
+@article-meta-line-height:                      1.4;
+@article-meta-text-transform:                  none;
+
+@article-meta-link-color:                       @article-meta-color;
+@article-meta-link-hover-color:                 @global-color;
+
+
+// Component
+// ========================================================================
+
+.hook-article() {}
+
+
+// Adjacent sibling
+// ========================================================================
+
+.hook-article-adjacent() {}
+
+
+// Title
+// ========================================================================
+
+.hook-article-title() {
+    color: @article-title-color;
+    font-family: @article-title-font-family;
+    letter-spacing: @article-title-letter-spacing;
+    line-height: @article-title-line-height;
+    text-transform: @article-title-text-transform;
+
+    a { color: @article-title-link-color; }
+
+        a:hover {
+            color: @article-title-link-hover-color;
+            text-decoration: none;
+        }
+}
+
+
+// Meta
+// ========================================================================
+
+.hook-article-meta() {
+    color: @article-meta-color;
+    font-family: @article-meta-font-family;
+    letter-spacing: @article-meta-letter-spacing;
+    line-height: @article-meta-line-height;
+    text-transform: @article-meta-text-transform;
+
+        a { color: @article-meta-link-color; }
+
+        a:hover {
+            color: @article-meta-link-hover-color;
+            text-decoration: none;
+        }
+
+}
+
+
+// Miscellaneous
+// ========================================================================
+
+.hook-article-misc() {}
+
+
+// Inverse
+// ========================================================================
+
+.hook-inverse-article-meta() {}

@@ -248,28 +248,9 @@ td.uk-text-break { word-break: break-all; }
 // ========================================================================
 
 .hook-text-misc;
-@text-lead-font-family:                         @global-font-family;
-@text-lead-font-weight:                         normal;
-@text-lead-letter-spacing:                      0;
-@text-lead-text-transform:                      none;
 
-@text-meta-font-family:                         @global-font-family;
-@text-meta-font-weight:                         normal;
-@text-meta-letter-spacing:                      0;
-@text-meta-text-transform:                      none;
-
-.hook-text-lead() {
-    font-family: @text-lead-font-family;
-    font-weight: @text-lead-font-weight;
-    letter-spacing: @text-lead-letter-spacing;
-    text-transform: @text-lead-text-transform;
-}
-.hook-text-meta() {
-    font-family: @text-meta-font-family;
-    font-weight: @text-meta-font-weight;
-    letter-spacing: @text-meta-letter-spacing;
-    text-transform: @text-meta-text-transform;
-}
+.hook-text-lead() {}
+.hook-text-meta() {}
 .hook-text-small() {}
 .hook-text-large() {}
 .hook-text-background() {}

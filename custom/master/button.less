@@ -1,0 +1,300 @@
+//
+// Component: Button
+//
+// ========================================================================
+
+
+// Variables
+// ========================================================================
+
+@button-line-height:                            @global-control-height - (@button-border-width * 2);
+@button-small-line-height:                      @global-control-small-height - (@button-border-width * 2);
+@button-large-line-height:                      @global-control-large-height - (@button-border-width * 2);
+
+@button-font-size:                              @global-small-font-size;
+@button-large-font-size:                        @global-small-font-size;
+
+@button-default-background:                     transparent;
+@button-default-hover-background:               transparent;
+@button-default-active-background:              transparent;
+
+@button-disabled-background:                    transparent;
+
+@button-text-color:                             @global-emphasis-color;
+@button-text-hover-color:                       @global-emphasis-color;
+
+@button-text-transform:                         uppercase;
+
+@button-border-width:                           @global-border-width;
+@button-border-radius:                          0;
+
+@button-default-border:                         @global-border;
+@button-default-hover-border:                   darken(@global-border, 20%);
+@button-default-active-border:                  darken(@global-border, 30%);
+
+@button-disabled-border:                        @global-border;
+
+/*
+@button-text-border-width:                      @global-border-width;
+@button-text-border:                            @button-text-hover-color;
+*/
+
+@button-letter-spacing:                         0;
+
+@button-text-border-width:                      @global-border-width;
+@button-text-border:                            currentColor;
+@button-text-hover-border:                      currentColor;
+@button-text-mode:                              arrow; // none, line, arrow
+@button-text-transform:                         uppercase;
+
+@button-transition-duration:                    0.2s;
+
+@internal-button-text-arrow-color:              @button-text-color;
+@internal-button-text-arrow-hover-color:        @button-text-hover-color;
+@internal-button-text-arrow-image:              "https://static.ipaoo.dev/assets/button-text-arrow.svg";
+@internal-button-text-arrow-padding:            5px;
+@internal-button-text-arrow-width:              22px;
+@internal-button-text-arrow-width-animation:    5px;
+
+
+// Component
+// ========================================================================
+
+.hook-button() {
+    border-radius: @button-border-radius;
+    letter-spacing: @button-letter-spacing;
+    text-transform: @button-text-transform;
+    transition: @button-transition-duration ease-in-out;
+    transition-property: color, background-color, border-color;
+}
+
+.hook-button-hover() {}
+
+.hook-button-focus() {}
+
+.hook-button-active() {}
+
+
+// Style modifiers
+// ========================================================================
+
+.hook-button-default() { border: @button-border-width solid @button-default-border; }
+
+.hook-button-default-hover() { border-color: @button-default-hover-border; }
+
+.hook-button-default-active() { border-color: @button-default-active-border; }
+
+//
+// Primary
+//
+
+.hook-button-primary() { border: @button-border-width solid transparent; }
+
+.hook-button-primary-hover() {}
+
+.hook-button-primary-active() {}
+
+//
+// Secondary
+//
+
+.hook-button-secondary() { border: @button-border-width solid transparent; }
+
+.hook-button-secondary-hover() {}
+
+.hook-button-secondary-active() {}
+
+//
+// Danger
+//
+
+.hook-button-danger() { border: @button-border-width solid transparent; }
+
+.hook-button-danger-hover() {}
+
+.hook-button-danger-active() {}
+
+
+// Disabled
+// ========================================================================
+
+.hook-button-disabled() { border-color: @button-disabled-border; }
+
+
+// Size modifiers
+// ========================================================================
+
+.hook-button-small() {}
+
+.hook-button-large() {}
+
+
+// Text modifier
+// ========================================================================
+
+.hook-button-text() {
+
+    position: relative;
+
+    &::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 100%;
+        border-bottom: @button-text-border-width solid @button-text-border;
+        transition: right 0.3s ease-out;
+    }
+
+}
+
+.hook-button-text-hover() {
+
+    &::before { right: 0; }
+
+}
+
+
+//
+// Line effect
+//
+
+.hook-button-text() when (@button-text-mode = line) {
+
+    position: relative;
+    z-index: 0;
+
+    &::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 100%;
+        z-index: -1;
+        border-bottom: @button-text-border-width solid @button-text-border;
+        transition: right 0.3s ease-out;
+    }
+
+}
+
+.hook-button-text-hover() when (@button-text-mode = line) {
+
+    &::before { right: 0; }
+
+}
+
+.hook-button-text-disabled() when (@button-text-mode = line) {
+
+    &::before { display: none; }
+
+}
+
+//
+// Arrow effect
+//
+
+.hook-button-text() when (@button-text-mode = arrow) {
+
+    position: relative;
+    padding-right: (@internal-button-text-arrow-width + @internal-button-text-arrow-padding);
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        width: @internal-button-text-arrow-width;
+        .svg-fill(@internal-button-text-arrow-image, "#000", @internal-button-text-arrow-color);
+        background-repeat: no-repeat;
+        background-position: ~'calc(100% - @{internal-button-text-arrow-width-animation}) 50%';
+        transition: background-position @button-transition-duration ease-out;
+    }
+
+}
+.hook-button-text-hover() when (@button-text-mode = arrow) {
+
+    &::before {
+        .svg-fill(@internal-button-text-arrow-image, "#000", @internal-button-text-arrow-color);
+        background-position: 100% 50%;
+    }
+
+}
+// .hook-button-text-disabled() {
+
+//     &::before { display: none; }
+
+// }
+
+
+// Link modifier
+// ========================================================================
+
+.hook-button-link() {}
+
+
+// Miscellaneous
+// ========================================================================
+
+.hook-button-misc() {
+
+    /* Group
+     ========================================================================== */
+
+    /*
+     * Collapse border
+     */
+
+    .uk-button-group > .uk-button:nth-child(n+2),
+    .uk-button-group > div:nth-child(n+2) .uk-button { margin-left: -@button-border-width; }
+
+    /*
+     * Create position context to superimpose the successor elements border
+     * Known issue: If you use an `a` element as button and an icon inside,
+     * the active state will not work if you click the icon inside the button
+     * Workaround: Just use a `button` or `input` element as button
+     */
+
+    .uk-button-group .uk-button:hover,
+    .uk-button-group .uk-button:focus,
+    .uk-button-group .uk-button:active,
+    .uk-button-group .uk-button.uk-active {
+        position: relative;
+        z-index: 1;
+    }
+
+}
+
+
+// Inverse
+// ========================================================================
+
+@inverse-button-default-background:            transparent;
+@inverse-button-default-color:                 @inverse-global-emphasis-color;
+@inverse-button-default-hover-background:      transparent;
+@inverse-button-default-hover-color:           @inverse-global-emphasis-color;
+@inverse-button-default-active-background:     transparent;
+@inverse-button-default-active-color:          @inverse-global-emphasis-color;
+
+@inverse-button-text-color:                    @inverse-global-emphasis-color;
+@inverse-button-text-hover-color:              @inverse-global-emphasis-color;
+
+.hook-inverse-button-default() { border-color: @inverse-global-color; }
+.hook-inverse-button-default-hover() { border-color: @inverse-global-emphasis-color; }
+.hook-inverse-button-default-active() { border-color: @inverse-global-emphasis-color; }
+
+.hook-inverse-button-primary() {}
+.hook-inverse-button-primary-hover() {}
+.hook-inverse-button-primary-active() {}
+
+.hook-inverse-button-secondary() {}
+.hook-inverse-button-secondary-hover() {}
+.hook-inverse-button-secondary-active() {}
+
+.hook-inverse-button-text() {
+    &::before { border-bottom-color: @inverse-global-emphasis-color; }
+}
+.hook-inverse-button-text-hover() {}
+.hook-inverse-button-text-disabled() {}
+
+.hook-inverse-button-link() {}
