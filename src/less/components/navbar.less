@@ -494,10 +494,16 @@
 // ========================================================================
 
 .hook-navbar-misc;
+@navbar-nav-item-font-weight:                   normal;
+@navbar-nav-item-letter-spacing:                2px;
+@navbar-nav-item-text-transform:                uppercase;
 
 .hook-navbar() {}
 .hook-navbar-container() {}
-.hook-navbar-nav-item() {}
+.hook-navbar-nav-item() {
+    letter-spacing: @navbar-nav-item-letter-spacing;
+    text-transform: @navbar-nav-item-text-transform;
+}
 .hook-navbar-nav-item-hover() {}
 .hook-navbar-nav-item-onclick() {}
 .hook-navbar-nav-item-active() {}
