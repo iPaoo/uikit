@@ -20,7 +20,7 @@ export default function (UIkit) {
         (new MutationObserver(mutations => {
             const updates = [];
             mutations.forEach(mutation => applyMutation(mutation, updates));
-            updates.forEach(UIkit.update);
+            updates.forEach(el => UIkit.update(el));
         })).observe(document, {
             childList: true,
             subtree: true,
@@ -40,7 +40,7 @@ export default function (UIkit) {
             : applyAttribute(mutation);
 
         if (update && !updates.some(element => element.contains(target))) {
-            updates.push(target);
+            updates.push(target.contains ? target : target.parentNode); // IE 11 text node does not implement contains
         }
 
     }

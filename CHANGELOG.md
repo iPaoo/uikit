@@ -1,10 +1,135 @@
 # Changelog
 
-## WIP
+## 3.4.3 (May 5, 2020)
+
+### Added
+
+- Add list collapse modifier
+
+### Changed
+
+- Improve attribute state observer performance
+
+### Fixed
+
+- Fix Search Icon with large modifier
+- Fix Grid divider in RTL mode
+- Fix Slider component responsiveness
+
+## 3.4.2 (April 20, 2020)
+
+### Added
+
+- Hide Drop components on `Esc` keypress
+
+### Fixed
+
+- Fix `quote-right` icon empty in RTL mode
+- Revert: Fix Sticky component correctly updates on `update`
+
+## 3.4.1 (April 16, 2020)
+
+### Fixed
+
+- Fix `bottom` if offset is `0` in Sticky component
+- Fix dropbar mode `push` is only applied if Navbar is positioned static
+- Fix Sticky component correctly updates on `update`
+- Fix Sticky component handles `vh` values for `top`and `bottom` options
+- Fix Sticky component sets its width with fraction
+- Fix Sticky component with `show-on-up` and `bottom` option updates correctly
+- Fix Tooltip component no longer disappears on SVG shape elements
+- Fix regression with Modal/Offcanvas component not opening in IE 11
+
+## 3.4.0 (April 9, 2020)
+
+### Added
+
+- Add `attrs` option to Lightbox items
+- Add additional url parameters to YouTube/Vimeo embed URLs in Lightbox component
+
+### Changed
+
+- Change default dimensions to 1920x1080 for YouTube in Lightbox component 
+
+### Fixed
+
+- Fix subnav not wrapping into the next line correctly when using `uk-margin` attribute
+- Fix selected `uk-text-background` text being visible in Firefox
+- Fix Scrollspy Nav component activating previous item in Firefox
+- Fix toggling Offcanvas component
+- Fix Sortable component unable to sort table rows
+- Fix autoplay for YouTube and Vimeo videos in Lightbox component
+- Fix dragging slides in Lightbox component in Chrome mobile
+
+## 3.3.7 (March 19, 2020)
+
+### Fixed
+
+- Fix Height Match component not matching empty elements
+- Fix Scrollspy Nav component activating wrong elements
+- Fix Modal/Drop close on bgClick behaviour 
+- Fix `z-index` on Modal stacked dialogs
+
+## 3.3.6 (March 12, 2020)
+
+### Added
+
+- Add `offset` option to Accordion component
+
+### Changed
+
+- Removed `duration` option from Scroll component
+
+### Fixed
+
+- Fix regression in Accordion component
+
+## 3.3.5 (March 12, 2020)
+
+### Fixed
+
+- Fix regression in Sortable component
+
+## 3.3.4 (March 12, 2020)
+
+### Changed
+
+- `getEventPos` returns client coordinates only
+
+### Fixed
+
+- Fix Drop component does not close on pointerleave in Firefox
+- Fix Switcher component sets active state on ignored item
+- Fix Accordion component triggers events on elements only
+- Fix Accordion component no longer wraps its content without transition
+- Fix missing `$emit` function
+- Fix Sortable component performance
+- Fix prevent showing/hiding of Tooltip component
+
+## 3.3.3 (February 25, 2020)
+
+### Changed
+
+- Improve Tooltip component performance
+- Notifications remove their container if it's empty
+- The promise object returned by Modal Dialogs holds a reference to the Modal component itself.
+
+### Fixed
+
+- Fix style for breadcrumbs without last active item
+- Fix infinite loop in Slider component
+- Fix IE 11 compatibility
+- Fix Spinner component in RTL mode
+- Fix animating `stroke` in Parallax component when element is hidden
+
+## 3.3.2 (February 17, 2020)
 
 ### Fixed
 
 - Fix accessing computed properties after component has been disconnected
+- Fix Modal dialogs not being removed from DOM after close
+- Fix Lightbox opening only once
+- Fix updates having wrong type
 
 ## 3.3.1 (February 4, 2020)
 
@@ -385,7 +510,7 @@
 
 - Fix modal not opening on first click in Angular apps
 - Fix filter controls active state in Filter component
-- Fix Masonry Grid in Rtl mode
+- Fix Masonry Grid in RTL mode
 - Make sure autoplay does not resume after user interaction in slider-autoplay mixin
 - Fix `hasClass` in IE11
 

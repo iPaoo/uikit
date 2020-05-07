@@ -1,6 +1,6 @@
 import Animate from '../mixin/animate';
 import Class from '../mixin/class';
-import {$$, addClass, after, assign, append, before, children, clamp, css, getEventPos, height, includes, index, isEmpty, isInput, offset, off, on, pointerDown, pointerMove, pointerUp, remove, removeClass, scrollParents, scrollTop, toggleClass, trigger, within, getViewport} from 'uikit-util';
+import {$$, addClass, after, append, assign, attr, before, children, clamp, css, getEventPos, getViewport, hasTouch, height, includes, index, isEmpty, isInput, off, offset, on, parent, pointerDown, pointerMove, pointerUp, remove, removeClass, scrollParents, scrollTop, toggleClass, trigger, within} from 'uikit-util';
 
 export default {
 
@@ -39,9 +39,7 @@ export default {
         ['init', 'start', 'move', 'end'].forEach(key => {
             const fn = this[key];
             this[key] = e => {
-                this.scrollY = window.pageYOffset;
-                assign(this.pos, getEventPos(e, 'page'));
-
+                assign(this.pos, getEventPos(e));
                 fn(e);
             };
         });
@@ -55,28 +53,92 @@ export default {
 
     },
 
+    computed: {
+
+        target() {
+            return (this.$el.tBodies || [this.$el])[0];
+        },
+
+        items() {
+            return children(this.target);
+        },
+
+        isEmpty: {
+
+            get() {
+                return isEmpty(this.items);
+            },
+
+            watch(empty) {
+                toggleClass(this.target, this.clsEmpty, empty);
+            },
+
+            immediate: true
+
+        },
+
+        handles: {
+
+            get({handle}, el) {
+                return handle ? $$(handle, el) : this.items;
+            },
+
+            watch(handles, prev) {
+                css(prev, {touchAction: '', userSelect: ''});
+                css(handles, {touchAction: hasTouch ? 'none' : '', userSelect: 'none'}); // touchAction set to 'none' causes a performance drop in Chrome 80
+            },
+
+            immediate: true
+
+        }
+
+    },
+
     update: {
 
         write() {
 
-            if (this.clsEmpty) {
-                toggleClass(this.$el, this.clsEmpty, isEmpty(this.$el.children));
+            if (!this.drag || !parent(this.placeholder)) {
+                return;
             }
 
-            css(this.handle ? $$(this.handle, this.$el) : this.$el.children, {touchAction: 'none', userSelect: 'none'});
+            // clamp to viewport
+            const {x, y} = this.pos;
+            const {offsetTop, offsetLeft} = this.origin;
+            const {offsetHeight, offsetWidth} = this.drag;
+            const {right, bottom} = offset(window);
+            let target = document.elementFromPoint(x, y);
 
-            if (this.drag) {
+            css(this.drag, {
+                top: clamp(y - offsetTop, 0, bottom - offsetHeight),
+                left: clamp(x - offsetLeft, 0, right - offsetWidth)
+            });
 
-                // clamp to viewport
-                const {right, bottom} = offset(window);
-                offset(this.drag, {
-                    top: clamp(this.pos.y + this.origin.top, 0, bottom - this.drag.offsetHeight),
-                    left: clamp(this.pos.x + this.origin.left, 0, right - this.drag.offsetWidth)
-                });
+            const sortable = this.getSortable(target);
+            const previous = this.getSortable(this.placeholder);
+            const move = sortable !== previous;
 
+            if (!sortable || within(target, this.placeholder) || move && (!sortable.group || sortable.group !== previous.group)) {
+                return;
             }
 
-        }
+            target = sortable.target === target.parentNode && target || sortable.items.filter(element => within(target, element))[0];
+
+            if (move) {
+                previous.remove(this.placeholder);
+            } else if (!target) {
+                return;
+            }
+
+            sortable.insert(this.placeholder, target);
+
+            if (!includes(this.touched, sortable)) {
+                this.touched.push(sortable);
+            }
+
+        },
+
+        events: ['move']
 
     },
 
@@ -85,7 +147,7 @@ export default {
         init(e) {
 
             const {target, button, defaultPrevented} = e;
-            const [placeholder] = children(this.$el).filter(el => within(target, el));
+            const [placeholder] = this.items.filter(el => within(target, el));
 
             if (!placeholder
                 || defaultPrevented
@@ -105,7 +167,6 @@ export default {
 
             on(document, pointerMove, this.move);
             on(document, pointerUp, this.end);
-            on(window, 'scroll', this.scroll);
 
             if (!this.threshold) {
                 this.start(e);
@@ -116,13 +177,12 @@ export default {
         start(e) {
 
             this.drag = appendDrag(this.$container, this.placeholder);
-
-            const {left, top} = offset(this.placeholder);
-            assign(this.origin, {left: left - this.pos.x, top: top - this.pos.y});
+            const {left, top} = this.placeholder.getBoundingClientRect();
+            assign(this.origin, {offsetLeft: this.pos.x - left, offsetTop: this.pos.y - top});
 
             addClass(this.drag, this.clsDrag, this.clsCustom);
             addClass(this.placeholder, this.clsPlaceholder);
-            addClass(this.$el.children, this.clsItem);
+            addClass(this.items, this.clsItem);
             addClass(document.documentElement, this.clsDragState);
 
             trigger(this.$el, 'start', [this, this.placeholder]);
@@ -134,39 +194,10 @@ export default {
 
         move(e) {
 
-            if (!this.drag) {
-
-                if (Math.abs(this.pos.x - this.origin.x) > this.threshold || Math.abs(this.pos.y - this.origin.y) > this.threshold) {
-                    this.start(e);
-                }
-
-                return;
-            }
-
-            this.$update();
-
-            let target = e.type === 'mousemove' ? e.target : document.elementFromPoint(this.pos.x - window.pageXOffset, this.pos.y - window.pageYOffset);
-
-            const sortable = this.getSortable(target);
-            const previous = this.getSortable(this.placeholder);
-            const move = sortable !== previous;
-
-            if (!sortable || within(target, this.placeholder) || move && (!sortable.group || sortable.group !== previous.group)) {
-                return;
-            }
-
-            target = sortable.$el === target.parentNode && target || children(sortable.$el).filter(element => within(target, element))[0];
-
-            if (move) {
-                previous.remove(this.placeholder);
-            } else if (!target) {
-                return;
-            }
-
-            sortable.insert(this.placeholder, target);
-
-            if (!includes(this.touched, sortable)) {
-                this.touched.push(sortable);
+            if (this.drag) {
+                this.$emit('move');
+            } else if (Math.abs(this.pos.x - this.origin.x) > this.threshold || Math.abs(this.pos.y - this.origin.y) > this.threshold) {
+                this.start(e);
             }
 
         },
@@ -204,37 +235,28 @@ export default {
             this.drag = null;
 
             const classes = this.touched.map(sortable => `${sortable.clsPlaceholder} ${sortable.clsItem}`).join(' ');
-            this.touched.forEach(sortable => removeClass(sortable.$el.children, classes));
+            this.touched.forEach(sortable => removeClass(sortable.items, classes));
 
             removeClass(document.documentElement, this.clsDragState);
 
         },
 
-        scroll() {
-            const scroll = window.pageYOffset;
-            if (scroll !== this.scrollY) {
-                this.pos.y += scroll - this.scrollY;
-                this.scrollY = scroll;
-                this.$update();
-            }
-        },
-
         insert(element, target) {
 
-            addClass(this.$el.children, this.clsItem);
+            addClass(this.items, this.clsItem);
 
             const insert = () => {
 
                 if (target) {
 
-                    if (!within(element, this.$el) || isPredecessor(element, target)) {
+                    if (!within(element, this.target) || isPredecessor(element, target)) {
                         before(target, element);
                     } else {
                         after(target, element);
                     }
 
                 } else {
-                    append(this.$el, element);
+                    append(this.target, element);
                 }
 
             };
@@ -249,11 +271,9 @@ export default {
 
         remove(element) {
 
-            if (!within(element, this.$el)) {
+            if (!within(element, this.target)) {
                 return;
             }
-
-            css(this.handle ? $$(this.handle, element) : element, {touchAction: '', userSelect: ''});
 
             if (this.animation) {
                 this.animate(() => remove(element));
@@ -278,19 +298,25 @@ function isPredecessor(element, target) {
 let trackTimer;
 function trackScroll(pos) {
 
+    let last = Date.now();
     trackTimer = setInterval(() => {
 
-        const {x, y} = pos;
-        scrollParents(document.elementFromPoint(x - window.pageXOffset, y - window.pageYOffset)).some(scrollEl => {
+        let {x, y} = pos;
+        y += window.pageYOffset;
+
+        const dist = (Date.now() - last) * .3;
+        last = Date.now();
+
+        scrollParents(document.elementFromPoint(x, pos.y)).some(scrollEl => {
 
             let {scrollTop: scroll, scrollHeight} = scrollEl;
 
             const {top, bottom, height} = offset(getViewport(scrollEl));
 
             if (top < y && top + 30 > y) {
-                scroll -= 5;
+                scroll -= dist;
             } else if (bottom > y && bottom - 30 < y) {
-                scroll += 5;
+                scroll += dist;
             } else {
                 return;
             }
@@ -311,7 +337,9 @@ function untrackScroll() {
 }
 
 function appendDrag(container, element) {
-    const clone = append(container, element.outerHTML.replace(/(^<)li|li(\/>$)/g, '$1div$2'));
+    const clone = append(container, element.outerHTML.replace(/(^<)(?:li|tr)|(?:li|tr)(\/>$)/g, '$1div$2'));
+
+    attr(clone, 'style', `${attr(clone, 'style')};margin:0!important`);
 
     css(clone, assign({
         boxSizing: 'border-box',

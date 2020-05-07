@@ -113,7 +113,7 @@ export default {
                 return;
             }
 
-            const prevIndex = this.index;
+            const prevIndex = this.getIndex(this.index);
             const prev = hasClass(this.slides, this.clsActive) && this.slides[prevIndex];
             const nextIndex = this.getIndex(index, this.index);
             const next = this.slides[nextIndex];
@@ -127,8 +127,9 @@ export default {
             this.prevIndex = prevIndex;
             this.index = nextIndex;
 
-            prev && trigger(prev, 'beforeitemhide', [this]);
-            if (!trigger(next, 'beforeitemshow', [this, prev])) {
+            if (prev && !trigger(prev, 'beforeitemhide', [this])
+                || !trigger(next, 'beforeitemshow', [this, prev])
+            ) {
                 this.index = this.prevIndex;
                 reset();
                 return;
