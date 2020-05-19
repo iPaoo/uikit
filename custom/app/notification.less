@@ -1,0 +1,54 @@
+//
+// Component: Notification
+//
+// ========================================================================
+
+
+// Variables
+// ========================================================================
+
+@notification-message-padding:                        @global-gutter;
+@notification-message-background:                     #313131;
+@notification-message-font-size:                      @global-small-font-size;
+
+@notification-close-top:                              @notification-message-padding + 3px;
+@notification-close-right:                            24px;
+
+
+// Component
+// ========================================================================
+
+.hook-notification() {}
+
+
+// Message
+// ========================================================================
+
+.hook-notification-message() {
+    box-shadow: @global-small-box-shadow;
+    letter-spacing: 1px;
+}
+
+
+// Close
+// ========================================================================
+
+.hook-notification-close() {}
+
+
+// Style modifiers
+// ========================================================================
+
+.hook-notification-message-primary() {}
+
+.hook-notification-message-success() {}
+
+.hook-notification-message-warning() {}
+
+.hook-notification-message-danger() {}
+
+
+// Miscellaneous
+// ========================================================================
+
+.hook-notification-misc() {}
