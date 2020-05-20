@@ -6902,7 +6902,7 @@ ul.uk-nav-sub {
 .uk-width-xlarge {
   width: 600px;
 }
-.uk-width-xxlarge {
+.uk-width-2xlarge {
   width: 750px;
 }
 /* Auto */
@@ -6971,7 +6971,7 @@ ul.uk-nav-sub {
   .uk-width-xlarge\@s {
     width: 600px;
   }
-  .uk-width-xxlarge\@s {
+  .uk-width-2xlarge\@s {
     width: 750px;
   }
   /* Auto */
@@ -7041,7 +7041,7 @@ ul.uk-nav-sub {
   .uk-width-xlarge\@m {
     width: 600px;
   }
-  .uk-width-xxlarge\@m {
+  .uk-width-2xlarge\@m {
     width: 750px;
   }
   /* Auto */
@@ -7111,7 +7111,7 @@ ul.uk-nav-sub {
   .uk-width-xlarge\@l {
     width: 600px;
   }
-  .uk-width-xxlarge\@l {
+  .uk-width-2xlarge\@l {
     width: 750px;
   }
   /* Auto */
@@ -7181,7 +7181,7 @@ ul.uk-nav-sub {
   .uk-width-xlarge\@xl {
     width: 600px;
   }
-  .uk-width-xxlarge\@xl {
+  .uk-width-2xlarge\@xl {
     width: 750px;
   }
   /* Auto */
