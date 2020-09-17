@@ -1,0 +1,9 @@
+<svg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg">
+    <g>
+	<polyline fill="none" stroke="#444" stroke-width="2" points="3,4 29,4 29,24"></polyline>
+    </g>
+    <polyline fill="none" stroke="#444" stroke-width="2" points="4.2,20.4 10.1,14.5 17.4,21.9 "></polyline>
+    <path fill="#444" d="M19.5,11c0.8,0,1.5,0.7,1.5,1.5S20.3,14,19.5,14S18,13.3,18,12.5S18.7,11,19.5,11z"></path>
+    <rect x="1" y="8" fill="none" stroke="#444" stroke-width="2" width="24" height="18"></rect>
+    <polyline fill="none" stroke="#444" stroke-width="2" points="14.5,18.9 16.7,16.7 21.8,21.9 "></polyline>
+</svg>

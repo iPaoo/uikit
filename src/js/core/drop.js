@@ -185,7 +185,7 @@ export default {
             },
 
             handler(e) {
-                if (!isTouch(e)) {
+                if (!isTouch(e) && e.relatedTarget) {
                     this.hide();
                 }
             }
@@ -205,7 +205,6 @@ export default {
                 }
 
                 this.clearTimers();
-                Animation.cancel(this.$el);
                 this.position();
             }
 
@@ -331,9 +330,12 @@ export default {
                     return;
                 }
 
-                while (active && !within(this.$el, active.$el)) {
+                let prev;
+                while (active && prev !== active && !within(this.$el, active.$el)) {
+                    prev = active;
                     active.hide(false);
                 }
+
             }
 
             this.showTimer = setTimeout(() => !this.isToggled() && this.toggleElement(this.$el, true), delay && this.delayShow || 0);
