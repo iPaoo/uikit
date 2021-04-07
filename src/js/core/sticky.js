@@ -1,6 +1,6 @@
 import Class from '../mixin/class';
 import Media from '../mixin/media';
-import {$, addClass, after, Animation, assign, attr, css, fastdom, hasClass, inBrowser, isNumeric, isString, isVisible, noop, offset, offsetPosition, query, remove, removeClass, replaceClass, scrollTop, toFloat, toggleClass, toPx, trigger, within} from 'uikit-util';
+import {$, addClass, after, Animation, assign, css, dimensions, fastdom, hasClass, isNumeric, isString, isVisible, noop, offset, offsetPosition, parent, query, remove, removeClass, replaceClass, scrollTop, toFloat, toggleClass, toPx, trigger, within} from 'uikit-util';
 
 export default {
 
@@ -94,7 +94,9 @@ export default {
 
             name: 'load hashchange popstate',
 
-            el: inBrowser && window,
+            el() {
+                return window;
+            },
 
             handler() {
 
@@ -128,7 +130,7 @@ export default {
 
         {
 
-            read({height}, type) {
+            read({height}, types) {
 
                 this.inactive = !this.matchMedia || !isVisible(this.$el);
 
@@ -136,7 +138,7 @@ export default {
                     return false;
                 }
 
-                if (this.isActive && type !== 'update') {
+                if (this.isActive && types.has('resize')) {
                     this.hide();
                     height = this.$el.offsetHeight;
                     this.show();
@@ -151,7 +153,7 @@ export default {
 
                 this.top = Math.max(toFloat(parseProp('top', this)), this.topOffset) - this.offset;
                 this.bottom = bottom && bottom - this.$el.offsetHeight;
-                this.width = offset(isVisible(this.widthElement) ? this.widthElement : this.$el).width;
+                this.width = dimensions(isVisible(this.widthElement) ? this.widthElement : this.$el).width;
 
                 return {
                     height,
@@ -168,7 +170,7 @@ export default {
 
                 if (!within(placeholder, document)) {
                     after(this.$el, placeholder);
-                    attr(placeholder, 'hidden', '');
+                    placeholder.hidden = true;
                 }
 
                 this.isActive = !!this.isActive; // force self-assign
@@ -191,14 +193,15 @@ export default {
                 };
             },
 
-            write(data, type) {
+            write(data, types) {
 
                 const now = Date.now();
+                const isScrollUpdate = types.has('scroll');
                 const {initTimestamp = 0, dir, lastDir, lastScroll, scroll, top} = data;
 
                 data.lastScroll = scroll;
 
-                if (scroll < 0 || scroll === lastScroll && type === 'scroll' || this.showOnUp && type !== 'scroll' && !this.isFixed) {
+                if (scroll < 0 || scroll === lastScroll && isScrollUpdate || this.showOnUp && !isScrollUpdate && !this.isFixed) {
                     return;
                 }
 
@@ -215,7 +218,7 @@ export default {
 
                 if (this.inactive
                     || scroll < this.top
-                    || this.showOnUp && (scroll <= this.top || dir === 'down' && type === 'scroll' || dir === 'up' && !this.isFixed && scroll <= this.bottomOffset)
+                    || this.showOnUp && (scroll <= this.top || dir === 'down' && isScrollUpdate || dir === 'up' && !this.isFixed && scroll <= this.bottomOffset)
                 ) {
 
                     if (!this.isFixed) {
@@ -265,7 +268,7 @@ export default {
 
             this.isFixed = true;
             this.update();
-            attr(this.placeholder, 'hidden', null);
+            this.placeholder.hidden = false;
 
         },
 
@@ -274,7 +277,7 @@ export default {
             this.isActive = false;
             removeClass(this.$el, this.clsFixed, this.clsBelow);
             css(this.$el, {position: '', top: '', width: ''});
-            attr(this.placeholder, 'hidden', '');
+            this.placeholder.hidden = true;
 
         },
 
@@ -317,7 +320,7 @@ function parseProp(prop, {$props, $el, [`${prop}Offset`]: propOffset}) {
 
     } else {
 
-        return offset(value === true ? $el.parentNode : query(value, $el)).bottom;
+        return offset(value === true ? parent($el) : query(value, $el)).bottom;
 
     }
 }

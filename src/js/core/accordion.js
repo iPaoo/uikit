@@ -57,6 +57,10 @@ export default {
 
             immediate: true
 
+        },
+
+        toggles({toggle}) {
+            return this.items.map(item => $(toggle, item));
         }
 
     },
@@ -73,7 +77,7 @@ export default {
 
             handler(e) {
                 e.preventDefault();
-                this.toggle(index($$(`${this.targets} ${this.$props.toggle}`, this.$el), e.current));
+                this.toggle(index(this.toggles, e.current));
             }
 
         }
@@ -98,6 +102,7 @@ export default {
             items.forEach(el => this.toggleElement(el, !hasClass(el, this.clsOpen), (el, show) => {
 
                 toggleClass(el, this.clsOpen, show);
+                attr($(this.$props.toggle, el), 'aria-expanded', show);
 
                 const content = $(`${el._wrapper ? '> * ' : ''}${this.content}`, el);
 
@@ -131,5 +136,5 @@ export default {
 };
 
 function hide(el, hide) {
-    attr(el, 'hidden', hide ? '' : null);
+    el && (el.hidden = hide);
 }

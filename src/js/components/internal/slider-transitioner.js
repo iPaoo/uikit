@@ -1,5 +1,5 @@
 import {translate} from '../../mixin/internal/slideshow-animations';
-import {children, clamp, createEvent, css, Deferred, includes, index, isRtl, noop, offset, position, sortBy, Transition, trigger} from 'uikit-util';
+import {children, clamp, createEvent, css, Deferred, dimensions, findIndex, includes, isRtl, noop, position, Transition, trigger} from 'uikit-util';
 
 export default function (prev, next, dir, {center, easing, list}) {
 
@@ -7,10 +7,10 @@ export default function (prev, next, dir, {center, easing, list}) {
 
     const from = prev
         ? getLeft(prev, list, center)
-        : getLeft(next, list, center) + offset(next).width * dir;
+        : getLeft(next, list, center) + dimensions(next).width * dir;
     const to = next
         ? getLeft(next, list, center)
-        : from + offset(prev).width * dir * (isRtl ? -1 : 1);
+        : from + dimensions(prev).width * dir * (isRtl ? -1 : 1);
 
     return {
 
@@ -23,7 +23,6 @@ export default function (prev, next, dir, {center, easing, list}) {
 
             this.translate(percent);
 
-            prev && this.updateTranslates();
             percent = prev ? percent : clamp(percent, 0, 1);
             triggerUpdate(this.getItemIn(), 'itemin', {percent, duration, timing, dir});
             prev && triggerUpdate(this.getItemIn(true), 'itemout', {percent: 1 - percent, duration, timing, dir});
@@ -34,10 +33,6 @@ export default function (prev, next, dir, {center, easing, list}) {
 
             return deferred.promise;
 
-        },
-
-        stop() {
-            return Transition.stop(list);
         },
 
         cancel() {
@@ -60,16 +55,32 @@ export default function (prev, next, dir, {center, easing, list}) {
             css(list, 'transform', translate(clamp(
                 -to + (distance - distance * percent),
                 -getWidth(list),
-                offset(list).width
+                dimensions(list).width
             ) * (isRtl ? -1 : 1), 'px'));
 
-            this.updateTranslates();
+            const actives = this.getActives();
+            const itemIn = this.getItemIn();
+            const itemOut = this.getItemIn(true);
 
-            if (prev) {
-                percent = clamp(percent, -1, 1);
-                triggerUpdate(this.getItemIn(), 'itemtranslatein', {percent, dir});
-                triggerUpdate(this.getItemIn(true), 'itemtranslateout', {percent: 1 - percent, dir});
-            }
+            percent = prev ? clamp(percent, -1, 1) : 0;
+
+            children(list).forEach((slide, i) => {
+                const isActive = includes(actives, slide);
+                const isIn = slide === itemIn;
+                const isOut = slide === itemOut;
+                const translateIn = isIn || !isOut && (isActive || dir * (isRtl ? -1 : 1) === -1 ^ getElLeft(slide, list) > getElLeft(prev || next));
+
+                triggerUpdate(slide, `itemtranslate${translateIn ? 'in' : 'out'}`, {
+                    dir,
+                    percent: isOut
+                        ? 1 - percent
+                        : isIn
+                            ? percent
+                            : isActive
+                                ? 1
+                                : 0
+                });
+            });
 
         },
 
@@ -83,37 +94,21 @@ export default function (prev, next, dir, {center, easing, list}) {
 
         getItemIn(out = false) {
 
-            const actives = this.getActives();
-            const all = sortBy(slides(list), 'offsetLeft');
-            const i = index(all, actives[dir * (out ? -1 : 1) > 0 ? actives.length - 1 : 0]);
+            let actives = this.getActives();
+            let nextActives = inView(list, getLeft(next || prev, list, center));
 
-            return ~i && all[i + (prev && !out ? dir : 0)];
+            if (out) {
+                const temp = actives;
+                actives = nextActives;
+                nextActives = temp;
+            }
+
+            return nextActives[findIndex(nextActives, el => !includes(actives, el))];
 
         },
 
         getActives() {
-
-            const left = getLeft(prev || next, list, center);
-
-            return sortBy(slides(list).filter(slide => {
-                const slideLeft = getElLeft(slide, list);
-                return slideLeft >= left && slideLeft + offset(slide).width <= offset(list).width + left;
-            }), 'offsetLeft');
-
-        },
-
-        updateTranslates() {
-
-            const actives = this.getActives();
-
-            slides(list).forEach(slide => {
-                const isActive = includes(actives, slide);
-
-                triggerUpdate(slide, `itemtranslate${isActive ? 'in' : 'out'}`, {
-                    percent: isActive ? 1 : 0,
-                    dir: slide.offsetLeft <= next.offsetLeft ? 1 : -1
-                });
-            });
+            return inView(list, getLeft(prev || next, list, center));
         }
 
     };
@@ -131,29 +126,34 @@ function getLeft(el, list, center) {
 }
 
 export function getMax(list) {
-    return Math.max(0, getWidth(list) - offset(list).width);
+    return Math.max(0, getWidth(list) - dimensions(list).width);
 }
 
 export function getWidth(list) {
-    return slides(list).reduce((right, el) => offset(el).width + right, 0);
-}
-
-export function getMaxWidth(list) {
-    return slides(list).reduce((right, el) => Math.max(right, offset(el).width), 0);
+    return children(list).reduce((right, el) => dimensions(el).width + right, 0);
 }
 
 function centerEl(el, list) {
-    return offset(list).width / 2 - offset(el).width / 2;
+    return dimensions(list).width / 2 - dimensions(el).width / 2;
 }
 
 export function getElLeft(el, list) {
-    return (position(el).left + (isRtl ? offset(el).width - offset(list).width : 0)) * (isRtl ? -1 : 1);
+    return el && (position(el).left + (isRtl ? dimensions(el).width - dimensions(list).width : 0)) * (isRtl ? -1 : 1) || 0;
+}
+
+function inView(list, listLeft) {
+
+    listLeft -= 1;
+    const listRight = listLeft + dimensions(list).width + 2;
+
+    return children(list).filter(slide => {
+        const slideLeft = getElLeft(slide, list);
+        const slideRight = slideLeft + dimensions(slide).width;
+
+        return slideLeft >= listLeft && slideRight <= listRight;
+    });
 }
 
 function triggerUpdate(el, type, data) {
     trigger(el, createEvent(type, false, false, data));
-}
-
-function slides(list) {
-    return children(list);
 }

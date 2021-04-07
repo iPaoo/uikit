@@ -423,6 +423,16 @@
 @mixin hook-card-secondary-title(){}
 @mixin hook-card-secondary-hover(){}
 @mixin hook-card-misc(){}
+@mixin hook-inverse-card-badge(){}
+@mixin hook-inverse-component-card(){
+
+    &.uk-card-badge {
+        background-color: $inverse-card-badge-background;
+        color: $inverse-card-badge-color;
+        @if(mixin-exists(hook-inverse-card-badge)) {@include hook-inverse-card-badge();}
+    }
+
+}
 @mixin hook-close(){}
 @mixin hook-close-hover(){}
 @mixin hook-close-misc(){}
@@ -1363,6 +1373,7 @@
 @mixin hook-lightbox-toolbar-icon-hover(){}
 @mixin hook-lightbox-button(){}
 @mixin hook-lightbox-button-hover(){}
+@mixin hook-lightbox-button-active(){}
 @mixin hook-lightbox-misc(){}
 @mixin hook-link-muted(){}
 @mixin hook-link-muted-hover(){}
