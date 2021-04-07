@@ -19,6 +19,10 @@
 
 @form-stacked-margin-bottom:                    5px;
 
+//
+// New
+//
+
 @form-border-width:                             @global-border-width;
 @form-border:                                   @global-border;
 
@@ -44,11 +48,11 @@
 @form-label-color:                              @global-emphasis-color;
 @form-label-font-size:                          @global-small-font-size;
 
-@internal-form-select-image:                     "https://template.ipaoo.dev/master/backgrounds/form-select.svg";
-@internal-form-datalist-image:                   "https://template.ipaoo.dev/master/backgrounds/form-datalist.svg";
-@internal-form-radio-image:                      "https://template.ipaoo.dev/master/backgrounds/form-radio.svg";
-@internal-form-checkbox-image:                   "https://template.ipaoo.dev/master/backgrounds/form-checkbox.svg";
-@internal-form-checkbox-indeterminate-image:     "https://template.ipaoo.dev/master/backgrounds/form-checkbox-indeterminate.svg";
+@internal-form-select-image:                    '<svg width="24" height="16" viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><polygon fill="#000" points="12 1 9 6 15 6" /><polygon fill="#000" points="12 13 9 8 15 8" /></svg>';
+@internal-form-datalist-image:                  '<svg width="24" height="16" viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><polygon fill="#000" points="12 12 8 6 16 6" /></svg>';
+@internal-form-radio-image:                     '<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><circle fill="#000" cx="8" cy="8" r="2" /></svg>';
+@internal-form-checkbox-image:                  '<svg width="14" height="11" viewBox="0 0 14 11" xmlns="http://www.w3.org/2000/svg"><polygon fill="#000" points="12 1 5 7.5 2 5 1 5.5 5 10 13 1.5" /></svg>';
+@internal-form-checkbox-indeterminate-image:    '<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><rect fill="#000" x="3" y="8" width="10" height="1" /></svg>';
 
 
 // Component
@@ -84,8 +88,52 @@
 }
 
 
+/* Select
+ ========================================================================== */
+
+.uk-select:not([multiple]):not([size]) {
+    /* 1 */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    /* 2 */
+    padding-right: @form-select-padding-right;
+    .svg-data(@internal-form-select-image, "#000", @form-select-icon-color);
+    background-repeat: no-repeat;
+    background-position: 100% 50%;
+}
+
+/*
+ * Disabled
+ */
+
+ .uk-select:not([multiple]):not([size]):disabled { .svg-data(@internal-form-select-image, "#000", @form-select-disabled-icon-color); }
+
+
+ /* Datalist
+ ========================================================================== */
+
+.uk-input[list]:hover,
+.uk-input[list]:focus { .svg-data(@internal-form-datalist-image, "#000", @form-datalist-icon-color); }
+
+
 // Radio and checkbox
 // ========================================================================
+
+/*
+ * Icons
+ */
+
+.uk-radio:checked { .svg-data(@internal-form-radio-image, "#000", @form-radio-checked-icon-color); }
+.uk-checkbox:checked { .svg-data(@internal-form-checkbox-image, "#000", @form-radio-checked-icon-color); }
+.uk-checkbox:indeterminate { .svg-data(@internal-form-checkbox-indeterminate-image, "#000", @form-radio-checked-icon-color); }
+
+/*
+ * Disabled
+ */
+
+.uk-radio:disabled:checked { .svg-data(@internal-form-radio-image, "#000", @form-radio-disabled-icon-color); }
+.uk-checkbox:disabled:checked { .svg-data(@internal-form-checkbox-image, "#000", @form-radio-disabled-icon-color); }
+.uk-checkbox:disabled:indeterminate { .svg-data(@internal-form-checkbox-indeterminate-image, "#000", @form-radio-disabled-icon-color); }
 
 .hook-form-radio() {
     border: @form-radio-border-width solid @form-radio-border;
@@ -117,6 +165,14 @@
 }
 
 
+// Custom Controls
+// ========================================================================
+
+ .uk-form-custom {
+    display: block;
+}
+
+
 // Layout
 // ========================================================================
 
@@ -135,6 +191,22 @@
 // ========================================================================
 
 @inverse-form-label-color:                      @inverse-global-emphasis-color;
+
+.hook-inverse() {
+
+    // Select
+    .uk-select:not([multiple]):not([size]) { .svg-data(@internal-form-select-image, "#000", @inverse-form-select-icon-color); }
+
+    // Datalist
+    .uk-input[list]:hover,
+    .uk-input[list]:focus { .svg-data(@internal-form-datalist-image, "#000", @inverse-form-datalist-icon-color); }
+
+    // Icon
+    .uk-radio:checked { .svg-data(@internal-form-radio-image, "#000", @inverse-form-radio-checked-icon-color); }
+    .uk-checkbox:checked { .svg-data(@internal-form-checkbox-image, "#000", @inverse-form-radio-checked-icon-color); }
+    .uk-checkbox:indeterminate { .svg-data(@internal-form-checkbox-indeterminate-image, "#000", @inverse-form-radio-checked-icon-color); }
+
+}
 
 .hook-inverse-form() { border-color: @inverse-global-border; }
 .hook-inverse-form-focus() { border-color: @inverse-global-color; }

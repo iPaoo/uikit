@@ -7,15 +7,42 @@
 // Variables
 // ========================================================================
 
+@totop-background:                              transparent;
+@totop-hover-background:                        transparent;
+@totop-active-background:                       transparent;
+
+@totop-border-radius:                           0;
+@totop-border-width:                            0;
+@totop-border:                                  transparent;
+@totop-hover-border:                            transparent;
+@totop-active-border:                           transparent;
+
 
 // Component
 // ========================================================================
 
-.hook-totop() { transition: color 0.1s ease-in-out; }
+.hook-totop() when not (@totop-border-radius = 0) {
+    border-radius: @totop-border-radius;
+}
+.hook-totop() when not (@totop-border-width = 0) {
+    border: @totop-border-width solid @totop-border;
+}
+.hook-totop() { 
+    background: @totop-background;
+    transition: 0.1s ease-in-out;
+    transition-property: color, background-color, border-color, box-shadow;
+}
 
-.hook-totop-hover() {}
+.hook-totop-hover() when not (@totop-border-width = 0) {
+    border-color: @totop-hover-border;
+}
+.hook-totop-hover() { background-color: @totop-hover-background; }
 
-.hook-totop-active() {}
+.hook-totop-active() when not (@totop-border-width = 0) {
+    border-color: @totop-active-border;
+}
+.hook-totop-active() { background-color: @totop-active-background; }
+
 
 
 // Miscellaneous
@@ -27,6 +54,28 @@
 // Inverse
 // ========================================================================
 
-.hook-inverse-totop() {}
-.hook-inverse-totop-hover() {}
-.hook-inverse-totop-active() {}
+@inverse-totop-background:                              transparent;
+@inverse-totop-hover-background:                        transparent;
+@inverse-totop-active-background:                       transparent;
+
+@inverse-totop-border:                                  transparent;
+@inverse-totop-hover-border:                            transparent;
+@inverse-totop-active-border:                           transparent;
+
+.hook-inverse-totop() when not (@totop-border-width = 0) {
+    border-color: @inverse-totop-border;
+}
+.hook-inverse-totop() { background-color: @inverse-totop-background; }
+
+
+.hook-inverse-totop-hover() when not (@totop-border-width = 0) {
+    border-color: @inverse-totop-hover-border;
+}
+.hook-inverse-totop-hover() { background-color: @inverse-totop-hover-background; }
+
+
+.hook-inverse-totop-active() when not (@totop-border-width = 0) {
+    border-color: @inverse-totop-active-border;
+}
+.hook-inverse-totop-active() { background-color: @inverse-totop-active-background; }
+

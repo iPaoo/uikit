@@ -7,11 +7,20 @@
 // Variables
 // ========================================================================
 
-@internal-divider-icon-image:                   "https://template.ipaoo.dev/master/backgrounds/divider-icon.svg";
+@internal-divider-icon-image: '<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><circle fill="none" stroke="#000" stroke-width="2" cx="10" cy="10" r="7" /></svg>';
 
 
 // Icon
 // ========================================================================
+
+.uk-divider-icon {
+    position: relative;
+    height: @divider-icon-height;
+    .svg-data(~'@{internal-divider-icon-image}', "#000", @divider-icon-color);
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    .hook-divider-icon;
+}
 
 .hook-divider-icon() {}
 
@@ -42,6 +51,15 @@
 
 // Inverse
 // ========================================================================
+
+.hook-inverse() {
+
+    .uk-divider-icon {
+        .svg-data(@internal-divider-icon-image, "#000", @inverse-divider-icon-color);
+        .hook-inverse-divider-icon;
+    }
+
+}
 
 .hook-inverse-divider-icon() {}
 .hook-inverse-divider-icon-line() {}

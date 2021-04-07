@@ -18,29 +18,6 @@
 @button-default-hover-background:               transparent;
 @button-default-active-background:              transparent;
 
-/*
-@button-primary-background:                     transparent;
-@button-primary-color:                          @global-emphasis-color;
-@button-primary-hover-background:               transparent;
-@button-primary-hover-color:                    @global-link-hover-color;
-@button-primary-active-background:              transparent;
-@button-primary-active-color:                   @global-link-hover-color;
-
-@button-secondary-background:                   transparent;
-@button-secondary-color:                        @global-emphasis-color;
-@button-secondary-hover-background:             transparent;
-@button-secondary-hover-color:                  @global-link-hover-color;
-@button-secondary-active-background:            transparent;
-@button-secondary-active-color:                 @global-link-hover-color;
-
-@button-danger-background:                      transparent;
-@button-danger-color:                           @global-emphasis-color;
-@button-danger-hover-background:                transparent;
-@button-danger-hover-color:                     @global-danger-background;
-@button-danger-active-background:               transparent;
-@button-danger-active-color:                    @global-danger-background;
-*/
-
 @button-disabled-background:                    transparent;
 
 @button-text-color:                             @global-emphasis-color;
@@ -86,9 +63,7 @@
 // Style modifiers
 // ========================================================================
 
-.hook-button-default() {
-    border: @button-border-width solid @button-default-border;
-}
+.hook-button-default() { border: @button-border-width solid @button-default-border; }
 
 .hook-button-default-hover() { border-color: @button-default-hover-border; }
 
@@ -120,11 +95,9 @@
 
 .hook-button-danger() { border: @button-border-width solid transparent; }
 
-/*
-.hook-button-danger-hover() { border: @button-border-width solid @global-danger-background; }
+.hook-button-danger-hover() {}
 
-.hook-button-danger-active() { border: @button-border-width solid @global-danger-background; }
-*/
+.hook-button-danger-active() {}
 
 
 // Disabled
@@ -143,8 +116,6 @@
 
 // Text modifier
 // ========================================================================
-
-
 
 .hook-button-text() {
 
@@ -177,7 +148,6 @@
     }
 
 }
-
 
 .hook-button-text-disabled() {
 

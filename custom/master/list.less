@@ -7,10 +7,30 @@
 // Variables
 // ========================================================================
 
+//
+// New
+//
+
 @list-striped-border-width:                     @global-border-width;
 @list-striped-border:                           @global-border;
 
-@internal-list-bullet-image:                    "https://template.ipaoo.dev/master/backgrounds/list-bullet.svg";
+@internal-list-bullet-image:                    '<svg width="6" height="6" viewBox="0 0 6 6" xmlns="http://www.w3.org/2000/svg"> <circle fill="#000" cx="3" cy="3" r="3" /></svg>';
+
+
+// Image bullet modifier
+// ========================================================================
+
+.uk-list-bullet > ::before {
+    content: "";
+    position: relative;
+    left: -@list-padding-left;
+    width: @list-padding-left;
+    height: @list-marker-height;
+    margin-bottom: -@list-marker-height;
+    .svg-data(@internal-list-bullet-image, "#000", @list-bullet-icon-color);
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+}
 
 
 // Style modifiers
@@ -27,8 +47,6 @@
 
 }
 
-.hook-list-bullet() {}
-
 
 // Miscellaneous
 // ========================================================================
@@ -39,6 +57,14 @@
 // Inverse
 // ========================================================================
 
+.hook-inverse() {
+
+    .uk-list-bullet > ::before {
+        .svg-data(@internal-list-bullet-image, "#000", @inverse-list-bullet-icon-color);
+    }
+
+}
+
 .hook-inverse-list-divider() {}
 .hook-inverse-list-striped() {
 
@@ -48,4 +74,3 @@
     }
 
 }
-.hook-inverse-list-bullet() {}

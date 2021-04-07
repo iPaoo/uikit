@@ -13,6 +13,7 @@
 
 @subnav-item-font-size:                         @global-small-font-size;
 @subnav-item-text-transform:                    uppercase;
+@subnav-item-letter-spacing:                    0;
 
 
 // Component
@@ -22,6 +23,7 @@
 
 .hook-subnav-item() {
     font-size: @subnav-item-font-size;
+    letter-spacing: @subnav-item-letter-spacing;
     text-transform: @subnav-item-text-transform;
     transition: 0.1s ease-in-out;
     transition-property: color, background-color;

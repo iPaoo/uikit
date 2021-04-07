@@ -7,14 +7,34 @@
 // Variables
 // ========================================================================
 
+//
+// New
+//
+
 @nav-default-font-size:                         @global-small-font-size;
 
-@internal-nav-parent-close-image:               "https://template.ipaoo.dev/master/backgrounds/nav-parent-close.svg";
-@internal-nav-parent-open-image:                "https://template.ipaoo.dev/master/backgrounds/nav-parent-open.svg";
+@internal-nav-parent-close-image:               '<svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg"><polyline fill="none" stroke="#000" stroke-width="1.1" points="10 1 4 7 10 13" /></svg>';
+@internal-nav-parent-open-image:                '<svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg"><polyline fill="none" stroke="#000" stroke-width="1.1" points="1 4 7 10 13 4" /></svg>';
 
 
 // Sublists
 // ========================================================================
+
+/* Parent icon modifier
+ ========================================================================== */
+
+ .uk-nav-parent-icon > .uk-parent > a::after {
+    content: "";
+    width: @nav-parent-icon-width;
+    height: @nav-parent-icon-height;
+    float: right;
+    .svg-data(@internal-nav-parent-close-image, "#000", @nav-parent-icon-color);
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    .hook-nav-parent-icon;
+}
+
+.uk-nav-parent-icon > .uk-parent.uk-open > a::after { .svg-data(@internal-nav-parent-open-image, "#000", @nav-parent-icon-color); }
 
 .hook-nav-sub() {}
 
@@ -77,6 +97,21 @@
 
 // Inverse
 // ========================================================================
+
+.hook-inverse() {
+
+    //
+    // Parent icon modifier
+    //
+
+    .uk-nav-parent-icon > .uk-parent > a::after {
+        .svg-data(@internal-nav-parent-close-image, "#000", @inverse-nav-parent-icon-color);
+        .hook-inverse-nav-parent-icon;
+    }
+
+    .uk-nav-parent-icon > .uk-parent.uk-open > a::after { .svg-data(@internal-nav-parent-open-image, "#000", @inverse-nav-parent-icon-color); }
+
+}
 
 .hook-inverse-nav-parent-icon() {}
 

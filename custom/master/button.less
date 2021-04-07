@@ -23,21 +23,20 @@
 @button-text-color:                             @global-emphasis-color;
 @button-text-hover-color:                       @global-emphasis-color;
 
+//
+// New
+//
+
 @button-text-transform:                         uppercase;
 
 @button-border-width:                           @global-border-width;
-@button-border-radius:                          0;
+@button-border-radius:                          @global-border-radius;
 
 @button-default-border:                         @global-border;
 @button-default-hover-border:                   darken(@global-border, 20%);
 @button-default-active-border:                  darken(@global-border, 30%);
 
 @button-disabled-border:                        @global-border;
-
-/*
-@button-text-border-width:                      @global-border-width;
-@button-text-border:                            @button-text-hover-color;
-*/
 
 @button-letter-spacing:                         0;
 
@@ -51,7 +50,7 @@
 
 @internal-button-text-arrow-color:              @button-text-color;
 @internal-button-text-arrow-hover-color:        @button-text-hover-color;
-@internal-button-text-arrow-image:              "https://template.ipaoo.dev/master/backgrounds/button-text-arrow.svg";
+@internal-button-text-arrow-image:              '<svg width="23" height="11" viewBox="0 0 23 11" xmlns="http://www.w3.org/2000/svg"><polyline fill="none" stroke="#000" points="17 1 22 5.5 17 10 " /><line fill="none" stroke="#000" x1="0" y1="5.5" x2="22.4" y2="5.5" /></svg>';
 @internal-button-text-arrow-padding:            5px;
 @internal-button-text-arrow-width:              22px;
 @internal-button-text-arrow-width-animation:    5px;
@@ -60,9 +59,15 @@
 // Component
 // ========================================================================
 
-.hook-button() {
-    border-radius: @button-border-radius;
+.hook-button-misc;
+
+.hook-button() when not (@button-letter-spacing = 0) {
     letter-spacing: @button-letter-spacing;
+}
+.hook-button() when not (@button-border-radius = 0) {
+    border-radius: @button-border-radius;
+}
+.hook-button() {
     text-transform: @button-text-transform;
     transition: @button-transition-duration ease-in-out;
     transition-property: color, background-color, border-color;
@@ -132,28 +137,6 @@
 // Text modifier
 // ========================================================================
 
-.hook-button-text() {
-
-    position: relative;
-
-    &::before {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 100%;
-        border-bottom: @button-text-border-width solid @button-text-border;
-        transition: right 0.3s ease-out;
-    }
-
-}
-
-.hook-button-text-hover() {
-
-    &::before { right: 0; }
-
-}
-
 
 //
 // Line effect
@@ -205,7 +188,7 @@
         bottom: 0;
         right: 0;
         width: @internal-button-text-arrow-width;
-        .svg-fill(@internal-button-text-arrow-image, "#000", @internal-button-text-arrow-color);
+        .svg-data(~'@{internal-button-text-arrow-image}', "#000", @internal-button-text-arrow-color);
         background-repeat: no-repeat;
         background-position: ~'calc(100% - @{internal-button-text-arrow-width-animation}) 50%';
         transition: background-position @button-transition-duration ease-out;
@@ -215,7 +198,7 @@
 .hook-button-text-hover() when (@button-text-mode = arrow) {
 
     &::before {
-        .svg-fill(@internal-button-text-arrow-image, "#000", @internal-button-text-arrow-color);
+        .svg-data(~'@{internal-button-text-arrow-image}', "#000", @internal-button-text-arrow-hover-color);
         background-position: 100% 50%;
     }
 
@@ -276,8 +259,11 @@
 @inverse-button-default-active-background:     transparent;
 @inverse-button-default-active-color:          @inverse-global-emphasis-color;
 
-@inverse-button-text-color:                    @inverse-global-emphasis-color;
-@inverse-button-text-hover-color:              @inverse-global-emphasis-color;
+@internal-inverse-button-text-arrow-color:              @inverse-button-text-color;
+@internal-inverse-button-text-arrow-hover-color:        @inverse-button-text-hover-color;
+
+@inverse-button-text-border:                            @inverse-global-border;
+@inverse-button-text-hover-border:                      transparent;      
 
 .hook-inverse-button-default() { border-color: @inverse-global-color; }
 .hook-inverse-button-default-hover() { border-color: @inverse-global-emphasis-color; }
@@ -291,9 +277,13 @@
 .hook-inverse-button-secondary-hover() {}
 .hook-inverse-button-secondary-active() {}
 
-.hook-inverse-button-text() {
-    &::before { border-bottom-color: @inverse-global-emphasis-color; }
+.hook-inverse-button-text() when (@button-text-mode = arrow) {
+    &::before { .svg-data(@internal-button-text-arrow-image, "#000", @internal-inverse-button-text-arrow-color); }
 }
+.hook-inverse-button-text-hover() when (@button-text-mode = arrow) {
+    &::before { .svg-data(@internal-button-text-arrow-image, "#000", @internal-inverse-button-text-arrow-hover-color); }
+}
+
 .hook-inverse-button-text-hover() {}
 .hook-inverse-button-text-disabled() {}
 

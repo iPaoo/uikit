@@ -1,0 +1,24 @@
+//
+// Component:       Mixin
+// Description:     Defines mixins which are used across all components
+//
+// ========================================================================
+
+
+// SVG
+// ========================================================================
+
+.svg-data( @code, @color-default, @color-new, @property: background-image ) {
+
+        @-svg-code: escape(~'<?xml version="1.0" ?>@{code}');
+        @-inline-svg-code: ~'data:image/svg+xml;charset=UTF-8,@{-svg-code}';
+
+        @escape-color-default: escape(@color-default);
+        @escape-color-new: escape("@{color-new}");
+
+        @replace-src: replace("@{-inline-svg-code}", "@{escape-color-default}", "@{escape-color-new}", "g");
+
+        @data-uri: e(@replace-src);
+        @{property}: url( '@{data-uri}' )
+        
+    }
